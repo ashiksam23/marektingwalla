@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Creed</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .animated-bg {
+            width: 300%;
+            height: 300%;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(148, 163, 184, 0.05) 0%, rgba(15, 23, 42, 0) 60%);
+            animation: rotateBg 40s linear infinite;
+            z-index: 0;
+        }
+        @keyframes rotateBg {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        .content-wrapper { position: relative; z-index: 1; }
+        .creed-card {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out, box-shadow 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .creed-card.visible { opacity: 1; transform: translateY(0); }
+        .creed-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        /* Modal Styles */
+        #gemini-modal { display: none; }
+        #gemini-modal.flex { display: flex; }
+        .modal-content h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1rem; margin-bottom: 0.5rem; color: white; }
+        .modal-content p { color: #d1d5db; margin-bottom: 1rem; }
+        .modal-content strong { color: white; }
+        /* Spinner */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-left-color: #60a5fa;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-white flex items-center justify-center min-h-full p-4 sm:p-6 md:p-8">
+
+    <div class="animated-bg"></div>
+
+    <div class="content-wrapper w-full max-w-5xl mx-auto">
+        <header class="text-center mb-10 md:mb-16">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight">
+                <span class="bg-gradient-to-r from-purple-400 to-sky-400 text-transparent bg-clip-text">The Creed</span>
+            </h1>
+            <p class="mt-3 text-lg text-slate-400">A collection of principles for growth and mastery.</p>
+        </header>
+
+        <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            
+            <!-- Card 1: Stay hungry, stay foolish. -->
+            <div class="creed-card bg-slate-800/60 p-6 rounded-2xl border border-slate-700 backdrop-blur-sm hover:border-purple-400 duration-300">
+                <div>
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-12 bg-purple-900/50 rounded-lg flex items-center justify-center border border-purple-600/50"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple-300"><path d="M5 12h14"/><path d="M12 5v14"/></svg></div>
+                        <h2 class="text-xl font-bold text-white">Stay hungry, stay foolish.</h2>
+                    </div>
+                    <blockquote class="text-slate-300">Keep the beginner’s fire alive — curiosity fuels growth.</blockquote>
+                </div>
+                <button class="explore-btn mt-6 bg-purple-500/10 text-purple-300 font-semibold py-2 px-4 rounded-lg border border-purple-500/20 hover:bg-purple-500/20 transition-all duration-300" data-creed="Stay hungry, stay foolish." data-quote="Keep the beginner’s fire alive — curiosity fuels growth.">✨ Explore</button>
+            </div>
+
+            <!-- Card 2: Slow is smooth, smooth is fast. -->
+            <div class="creed-card bg-slate-800/60 p-6 rounded-2xl border border-slate-700 backdrop-blur-sm hover:border-sky-400 duration-300">
+                <div>
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-12 bg-sky-900/50 rounded-lg flex items-center justify-center border border-sky-600/50"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-300"><path d="m21.49 16.5-5.5-5.5"/><path d="m13.5 18.5 5.5-5.5"/><path d="M3.5 7.5c0 4.5 4 8 8 8s8-3.5 8-8-3.5-8-8-8-8 3.5-8 8Z"/><path d="M5 12h.01"/></svg></div>
+                        <h2 class="text-xl font-bold text-white">Slow is smooth, smooth is fast.</h2>
+                    </div>
+                    <blockquote class="text-slate-300">Precision beats haste; mastery is built, not rushed.</blockquote>
+                </div>
+                <button class="explore-btn mt-6 bg-sky-500/10 text-sky-300 font-semibold py-2 px-4 rounded-lg border border-sky-500/20 hover:bg-sky-500/20 transition-all duration-300" data-creed="Slow is smooth, smooth is fast." data-quote="Precision beats haste; mastery is built, not rushed.">✨ Explore</button>
+            </div>
+
+            <!-- Card 3: Less is more. -->
+            <div class="creed-card bg-slate-800/60 p-6 rounded-2xl border border-slate-700 backdrop-blur-sm hover:border-green-400 duration-300">
+                 <div>
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-12 bg-green-900/50 rounded-lg flex items-center justify-center border border-green-600/50"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-300"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8" cy="8" r="1"></circle></svg></div>
+                        <h2 class="text-xl font-bold text-white">Less is more.</h2>
+                    </div>
+                    <blockquote class="text-slate-300">Simplicity sharpens impact.</blockquote>
+                </div>
+                <button class="explore-btn mt-6 bg-green-500/10 text-green-300 font-semibold py-2 px-4 rounded-lg border border-green-500/20 hover:bg-green-500/20 transition-all duration-300" data-creed="Less is more." data-quote="Simplicity sharpens impact.">✨ Explore</button>
+            </div>
+
+            <!-- Card 4: Focus is freedom. -->
+            <div class="creed-card bg-slate-800/60 p-6 rounded-2xl border border-slate-700 backdrop-blur-sm hover:border-yellow-400 duration-300">
+                <div>
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-12 bg-yellow-900/50 rounded-lg flex items-center justify-center border border-yellow-600/50"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-300"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg></div>
+                        <h2 class="text-xl font-bold text-white">Focus is freedom.</h2>
+                    </div>
+                    <blockquote class="text-slate-300">Clarity of aim unlocks everything.</blockquote>
+                </div>
+                <button class="explore-btn mt-6 bg-yellow-500/10 text-yellow-300 font-semibold py-2 px-4 rounded-lg border border-yellow-500/20 hover:bg-yellow-500/20 transition-all duration-300" data-creed="Focus is freedom." data-quote="Clarity of aim unlocks everything.">✨ Explore</button>
+            </div>
+
+            <!-- Card 5: Discipline is peace. -->
+            <div class="creed-card bg-slate-800/60 p-6 rounded-2xl border border-slate-700 backdrop-blur-sm hover:border-orange-400 duration-300">
+                <div>
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-12 bg-orange-900/50 rounded-lg flex items-center justify-center border border-orange-600/50"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-orange-300"><path d="M12 3v18"/><path d="M3 6h18"/><path d="M3 18h18"/></svg></div>
+                        <h2 class="text-xl font-bold text-white">Discipline is peace.</h2>
+                    </div>
+                    <blockquote class="text-slate-300">Structure creates strength — consistency sets you free.</blockquote>
+                </div>
+                <button class="explore-btn mt-6 bg-orange-500/10 text-orange-300 font-semibold py-2 px-4 rounded-lg border border-orange-500/20 hover:bg-orange-500/20 transition-all duration-300" data-creed="Discipline is peace." data-quote="Structure creates strength — consistency sets you free.">✨ Explore</button>
+            </div>
+
+            <!-- Card 6: Pressure is privilege. -->
+            <div class="creed-card bg-slate-800/60 p-6 rounded-2xl border border-slate-700 backdrop-blur-sm hover:border-red-400 duration-300">
+                <div>
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-12 bg-red-900/50 rounded-lg flex items-center justify-center border border-red-600/50"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-300"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+                        <h2 class="text-xl font-bold text-white">Pressure is privilege.</h2>
+                    </div>
+                    <blockquote class="text-slate-300">Only those who can bear weight rise higher.</blockquote>
+                </div>
+                <button class="explore-btn mt-6 bg-red-500/10 text-red-300 font-semibold py-2 px-4 rounded-lg border border-red-500/20 hover:bg-red-500/20 transition-all duration-300" data-creed="Pressure is privilege." data-quote="Only those who can bear weight rise higher.">✨ Explore</button>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Gemini Modal -->
+    <div id="gemini-modal" class="fixed inset-0 bg-black/70 items-center justify-center p-4 z-50">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 relative">
+            <button id="close-modal-btn" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">&times;</button>
+            <h2 id="modal-title" class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-sky-400 text-transparent bg-clip-text mb-4">Exploring the Creed</h2>
+            <div id="modal-spinner" class="flex justify-center items-center h-40">
+                <div class="spinner"></div>
+            </div>
+            <div id="modal-content" class="modal-content text-slate-300"></div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Staggered card animation
+            const cards = document.querySelectorAll('.creed-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => card.classList.add('visible'), 150 * (index + 1));
+            });
+
+            // Modal elements
+            const modal = document.getElementById('gemini-modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const modalTitle = document.getElementById('modal-title');
+            const modalContent = document.getElementById('modal-content');
+            const modalSpinner = document.getElementById('modal-spinner');
+            const exploreButtons = document.querySelectorAll('.explore-btn');
+
+            // --- Gemini API Call Logic ---
+            const callGeminiApi = async (creed, quote) => {
+                const apiKey = ""; // API key is handled by the environment
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                const systemPrompt = "You are a wise philosopher and mentor. When presented with a principle or 'creed', elaborate on it in a thoughtful and inspiring manner. Format your response using markdown-style headings for each section. Structure the response into three distinct sections: 1. ### Historical Context & Origins: Briefly discuss the origins or historical figures/philosophies associated with this idea. 2. ### Practical Application: Provide concrete, actionable advice on how someone can apply this principle in their daily life (work, personal growth, etc.). 3. ### A Question for Reflection: End with a single, powerful, open-ended question that encourages the reader to think deeply about the principle.";
+                const userQuery = `Elaborate on the creed: "${creed}" which is explained as: "${quote}".`;
+
+                const payload = {
+                    contents: [{ parts: [{ text: userQuery }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] },
+                };
+
+                let response;
+                let result;
+                let retries = 3;
+                let delay = 1000;
+
+                while(retries > 0) {
+                    try {
+                        response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+
+                        if(response.ok) {
+                            result = await response.json();
+                            const candidate = result.candidates?.[0];
+                            if (candidate && candidate.content?.parts?.[0]?.text) {
+                                // Basic markdown to HTML conversion
+                                let htmlContent = candidate.content.parts[0].text;
+                                htmlContent = htmlContent.replace(/### (.*?)\n/g, '<h3>$1</h3>');
+                                htmlContent = htmlContent.replace(/\n/g, '<br>');
+                                return htmlContent;
+                            }
+                        }
+                        
+                        console.error("API Error Response:", await response.text());
+
+                    } catch (error) {
+                        console.error("Fetch Error:", error);
+                    }
+                    retries--;
+                    if (retries > 0) {
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        delay *= 2; // Exponential backoff
+                    }
+                }
+                
+                return "<p class='text-red-400'>Sorry, I couldn't fetch insights at this moment. Please try again later.</p>";
+            };
+
+            // --- Modal Event Listeners ---
+            exploreButtons.forEach(button => {
+                button.addEventListener('click', async () => {
+                    const creed = button.dataset.creed;
+                    const quote = button.dataset.quote;
+
+                    modal.classList.add('flex');
+                    modalSpinner.style.display = 'flex';
+                    modalContent.innerHTML = '';
+                    modalTitle.textContent = `Exploring: ${creed}`;
+
+                    const geminiResponse = await callGeminiApi(creed, quote);
+
+                    modalSpinner.style.display = 'none';
+                    modalContent.innerHTML = geminiResponse;
+                });
+            });
+
+            const closeModal = () => modal.classList.remove('flex');
+
+            closeModalBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
