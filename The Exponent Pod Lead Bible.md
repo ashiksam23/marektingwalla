@@ -1,8 +1,8 @@
 # **The Exponent Pod Lead Bible**
 
-*Version: 1.0 (This is a living document. Update it weekly.)*
+##Version: 1.0 (This is a living document. Update it weekly.)##
 
-Owner: *Ashik Thomas*
+##Owner: Ashik Thomas##
 
 Welcome to Exponent.
 
