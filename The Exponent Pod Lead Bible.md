@@ -2,7 +2,7 @@
 
 Version: 1.0 (This is a living document. Update it weekly.)
 
-Owner: \[Founder's Name\]
+Owner: \Ashik Thomas]
 
 Welcome to Exponent.
 
