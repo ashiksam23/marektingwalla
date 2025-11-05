@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Are You Coachable? Quiz</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Use Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Simple transition for smooth showing/hiding */
+        .fade-enter-active, .fade-leave-active {
+            transition: opacity 0.5s ease;
+        }
+        .fade-enter-from, .fade-leave-to {
+            opacity: 0;
+        }
+        .fade-enter-to, .fade-leave-from {
+            opacity: 1;
+        }
+        /* Custom radio button style */
+        .custom-radio:checked {
+            background-color: #2563eb; /* blue-600 */
+            border-color: #2563eb;
+        }
+        .custom-radio:checked::after {
+            content: '';
+            display: block;
+            width: 0.5rem;
+            height: 0.5rem;
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .custom-radio {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid #9ca3af; /* gray-400 */
+            border-radius: 50%;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+
+    <main class="bg-white w-full max-w-2xl p-6 sm:p-10 rounded-xl shadow-2xl transition-all duration-300">
+
+        <!-- Quiz Section -->
+        <div id="quiz-section">
+            <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">Are You Coachable?</h1>
+            <p class="text-center text-gray-600 mb-8">Answer these 15 questions to find out how ready you are for coaching.</p>
+
+            <form id="quiz-form" class="space-y-6">
+                <!-- Questions will be injected here by JavaScript -->
+            </form>
+            
+            <button id="submit-quiz" class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 mt-8">
+                Get My Results
+            </button>
+            <p id="quiz-error" class="text-red-500 text-center mt-4 hidden">Please answer all questions before submitting.</p>
+        </div>
+
+        <!-- Results Section (Hidden by default) -->
+        <div id="results-section" class="hidden text-center">
+            <h2 id="result-title" class="text-3xl font-bold mb-4"></h2>
+            <p id="result-message" class="text-lg text-gray-700 mb-8"></p>
+
+            <!-- Contact Form -->
+            <div id="contact-form-container" class="text-left border-t border-gray-200 pt-8">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Let's Connect!</h3>
+                <p class="text-center text-gray-600 mb-6">Whether you're ready to start or just have questions, I'd love to hear from you.</p>
+                <form id="contact-form" action="#" method="POST">
+                    <div class="space-y-4">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                            <input type="text" name="name" id="name" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                            <input type="email" name="email" id="email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+                            <textarea id="message" name="message" rows="4" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Tell me a bit about your goals or ask any questions..."></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-green-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-200 mt-6">
+                        Send Message
+                    </button>
+                </form>
+                 <p id="form-success" class="text-green-600 text-center mt-4 hidden">Thank you! Your message has been sent.</p>
+            </div>
+            
+            <button id="restart-quiz" class="w-full bg-gray-500 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-all duration-200 mt-6">
+                Take the Quiz Again
+            </button>
+        </div>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const quizForm = document.getElementById('quiz-form');
+            const submitButton = document.getElementById('submit-quiz');
+            const quizError = document.getElementById('quiz-error');
+            const quizSection = document.getElementById('quiz-section');
+            const resultsSection = document.getElementById('results-section');
+            const resultTitle = document.getElementById('result-title');
+            const resultMessage = document.getElementById('result-message');
+            const restartButton = document.getElementById('restart-quiz');
+            const contactForm = document.getElementById('contact-form');
+            const formSuccess = document.getElementById('form-success');
+
+            const questions = [
+                "Are you open to trying new perspectives and approaches?",
+                "Do you take responsibility for your actions and outcomes?",
+                "Are you willing to be completely honest with yourself and your coach?",
+                "Do you consistently follow through on commitments you make?",
+                "Are you willing to step outside of your comfort zone?",
+                "Do you genuinely believe that change is possible for you?",
+                "Are you prepared to invest time and energy into your own growth?",
+                "Can you receive constructive feedback without becoming defensive?",
+                "Are you curious to learn more about yourself?",
+                "Do you see challenges as opportunities for growth rather than setbacks?",
+                "Are you willing to be vulnerable and explore difficult topics?",
+                "Do you prioritize your personal or professional development?",
+                "Are you patient with the process of growth, understanding it takes time?",
+                "Can you celebrate small wins along the way?",
+                "Are you ready to make a change *now*, not 'some day'?"
+            ];
+
+            // Populate questions
+            function loadQuestions() {
+                let questionHTML = '';
+                questions.forEach((question, index) => {
+                    questionHTML += `
+                        <div class="border border-gray-200 p-4 rounded-lg shadow-sm">
+                            <p class="font-medium text-gray-800 mb-3">${index + 1}. ${question}</p>
+                            <div class="flex space-x-6">
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="radio" name="q${index}" value="yes" class="custom-radio">
+                                    <span class="text-gray-700">Yes</span>
+                                </label>
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="radio" name="q${index}" value="not_yet" class="custom-radio">
+                                    <span class="text-gray-700">Not Yet</span>
+                                </label>
+                            </div>
+                        </div>
+                    `;
+                });
+                quizForm.innerHTML = questionHTML;
+            }
+
+            // Calculate results
+            function showResults() {
+                const formData = new FormData(quizForm);
+                let yesCount = 0;
+                let answeredCount = 0;
+
+                for (let i = 0; i < questions.length; i++) {
+                    const answer = formData.get(`q${i}`);
+                    if (answer) {
+                        answeredCount++;
+                        if (answer === 'yes') {
+                            yesCount++;
+                        }
+                    }
+                }
+
+                // Validation
+                if (answeredCount < questions.length) {
+                    quizError.classList.remove('hidden');
+                    return;
+                }
+
+                quizError.classList.add('hidden');
+                
+                // Threshold: 10 out of 15 "Yes" answers
+                if (yesCount >= 10) {
+                    resultTitle.textContent = "You're Ready for Coaching!";
+                    resultTitle.className = "text-3xl font-bold mb-4 text-green-600";
+                    resultMessage.textContent = `With a score of ${yesCount}/${questions.length}, you show a strong openness to growth and change. You have the mindset required to make coaching a powerful and transformative experience. Let's explore how we can work together to achieve your goals.`;
+                } else {
+                    resultTitle.textContent = "You're Almost There!";
+                    resultTitle.className = "text-3xl font-bold mb-4 text-yellow-600";
+                    resultMessage.textContent = `You scored ${yesCount}/${questions.length}. This is a great start! You have some key coachable traits, and there are a few areas we can explore together to get you fully prepared for a transformative coaching journey. Let's chat about what those next steps could look like.`;
+                }
+
+                // Show results and hide quiz
+                quizSection.classList.add('hidden');
+                resultsSection.classList.remove('hidden');
+                window.scrollTo(0, 0); // Scroll to top
+            }
+
+            // Restart quiz
+            function restart() {
+                resultsSection.classList.add('hidden');
+                quizSection.classList.remove('hidden');
+                quizForm.reset();
+                formSuccess.classList.add('hidden');
+                contactForm.reset();
+                window.scrollTo(0, 0);
+            }
+
+            // Handle form submission
+            function handleContactSubmit(e) {
+                e.preventDefault();
+                // In a real application, you would send this data to a server or email service.
+                // For this lead magnet, we'll just show a success message.
+                console.log('Form submitted with:');
+                console.log('Name:', document.getElementById('name').value);
+                console.log('Email:', document.getElementById('email').value);
+                console.log('Message:', document.getElementById('message').value);
+
+                contactForm.reset();
+                formSuccess.classList.remove('hidden');
+            }
+
+            // Initial load
+            loadQuestions();
+
+            // Event Listeners
+            submitButton.addEventListener('click', showResults);
+            restartButton.addEventListener('click', restart);
+            contactForm.addEventListener('submit', handleContactSubmit);
+        });
+    </script>
+</body>
+</html>
