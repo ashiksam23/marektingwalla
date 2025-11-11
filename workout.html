@@ -1,0 +1,348 @@
+<!-- Chosen Palette: Calm Harmony (Stone Neutrals + Indigo Accent) -->
+<!-- Application Structure Plan: Designed a task-oriented SPA. The default 'Overview' section (containing the weekly schedule table and a new summary donut chart) orients the user. A 7-day button navigation grid acts as the primary control. Clicking a day (e.g., 'Day 1') uses JavaScript to hide all other content panels and show *only* the specific workout content for that day. This structure is superior to the report's linear scroll, as it aligns with the user's goal ('What is my workout today?') and transforms the static plan into an active, usable tool. -->
+<!-- Visualization & Content Choices: Report Info: Weekly Schedule Table -> Goal: Provide overview -> Viz: HTML Table + Donut Chart -> Interaction: View-only -> Justification: Table provides schedule detail. The new Chart.js Donut chart ('Weekly Split') visually summarizes the plan's balance (4 Resistance, 1 Conditioning, 2 Rest), adding analytic value. -> Library: Chart.js. Report Info: Daily Exercise Lists (Tables/Bullets) -> Goal: Provide specific daily instruction -> Viz: Styled HTML Tables/Lists, one per day -> Interaction: Show/Hide via JS, triggered by Day navigation buttons -> Justification: Hides irrelevant days, focuses the user on the current task, prevents scrolling. -->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Fitness Routine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-button.active {
+            background-color: #4f46e5;
+            color: white;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <main class="container mx-auto p-4 sm:p-6 md:p-8 max-w-5xl">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-indigo-700 mb-2">Weekly Strength & Fitness Routine</h1>
+            <p class="text-base md:text-lg text-stone-600 max-w-3xl mx-auto">This is your interactive plan. Click a day below to see your workout. This balanced routine includes four resistance training days and three days for cardio, recovery, and rest.</p>
+        </header>
+
+        <nav id="day-nav" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 mb-8">
+            <button data-day="day-overview" class="nav-button w-full p-3 rounded-lg bg-white shadow-sm hover:bg-indigo-100 transition-colors duration-200">Overview</button>
+            <button data-day="day-1" class="nav-button w-full p-3 rounded-lg bg-white shadow-sm hover:bg-indigo-100 transition-colors duration-200">Day 1: Push</button>
+            <button data-day="day-2" class="nav-button w-full p-3 rounded-lg bg-white shadow-sm hover:bg-indigo-100 transition-colors duration-200">Day 2: Lower</button>
+            <button data-day="day-3" class="nav-button w-full p-3 rounded-lg bg-white shadow-sm hover:bg-indigo-100 transition-colors duration-200">Day 3: Recover</button>
+            <button data-day="day-4" class="nav-button w-full p-3 rounded-lg bg-white shadow-sm hover:bg-indigo-100 transition-colors duration-200">Day 4: Pull</button>
+            <button data-day="day-5" class="nav-button w-full p-3 rounded-lg bg-white shadow-sm hover:bg-indigo-100 transition-colors duration-200">Day 5: Full Body</button>
+            <button data-day="day-6" class="nav-button w-full p-3 rounded-lg bg-white shadow-sm hover:bg-indigo-100 transition-colors duration-200">Day 6: Cardio</button>
+        </nav>
+
+        <section id="content-area" class="bg-white p-4 sm:p-6 md:p-8 rounded-lg shadow-xl">
+            
+            <div id="day-overview" class="workout-panel">
+                <h2 class="text-2xl font-bold text-indigo-700 mb-4">Weekly Overview</h2>
+                <p class="text-stone-600 mb-6">Here's your complete schedule at a glance. The chart visualizes the balance of your routine, showing the split between different types of training and rest days. Use the buttons above to select a specific day for details.</p>
+                <div class="grid md:grid-cols-2 gap-6 items-center">
+                    <div class="overflow-x-auto">
+                        <table class="w-full min-w-full text-left">
+                            <thead class="bg-stone-100">
+                                <tr>
+                                    <th class="p-3 text-sm font-semibold text-stone-700">Day</th>
+                                    <th class="p-3 text-sm font-semibold text-stone-700">Focus Area</th>
+                                    <th class="p-3 text-sm font-semibold text-stone-700">Goal</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-stone-200">
+                                <tr>
+                                    <td class="p-3 font-medium">Day 1</td>
+                                    <td class="p-3">Upper Body (Push Focus)</td>
+                                    <td class="p-3">Chest, Shoulders, Triceps</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-medium">Day 2</td>
+                                    <td class="p-3">Lower Body (Strength)</td>
+                                    <td class="p-3">Quads, Hamstrings, Glutes</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-medium">Day 3</td>
+                                    <td class="p-3">Active Recovery / Rest</td>
+                                    <td class="p-3">Light walk, stretching, yoga</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-medium">Day 4</td>
+                                    <td class="p-3">Upper Body (Pull Focus)</td>
+                                    <td class="p-3">Back, Shoulders (Rear), Biceps</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-medium">Day 5</td>
+                                    <td class="p-3">Full Body Conditioning</td>
+                                    <td class="p-3">HIRT & Core</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-medium">Day 6</td>
+                                    <td class="p-3">Cardio & Core</td>
+                                    <td class="p-3">Moderate-intensity cardio</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-medium">Day 7</td>
+                                    <td class="p-3">Rest</td>
+                                    <td class="p-3">Complete rest for muscle repair</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="splitChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div id="day-1" class="workout-panel" style="display: none;">
+                <h2 class="text-2xl font-bold text-indigo-700 mb-4">Day 1: Upper Body (Push Focus)</h2>
+                <p class="text-stone-600 mb-6">Today focuses on your chest, shoulders (front/sides), and triceps. Aim for 3 sets of 8-12 reps, resting 60-90 seconds between sets.</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-full text-left">
+                        <thead class="bg-stone-100">
+                            <tr>
+                                <th class="p-3 text-sm font-semibold text-stone-700">Exercise</th>
+                                <th class="p-3 text-sm font-semibold text-stone-700">Sets x Reps</th>
+                                <th class="p-3 text-sm font-semibold text-stone-700">Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-stone-200">
+                            <tr><td class="p-3 font-medium">Barbell Bench Press</td><td class="p-3">3 x 8-10</td><td class="p-3">Primary Chest Movement</td></tr>
+                            <tr><td class="p-3 font-medium">Dumbbell Overhead Press</td><td class="p-3">3 x 10-12</td><td class="p-3">Shoulder Strength</td></tr>
+                            <tr><td class="p-3 font-medium">Incline Dumbbell Press</td><td class="p-3">3 x 10-12</td><td class="p-3">Focus on Upper Chest</td></tr>
+                            <tr><td class="p-3 font-medium">Lateral Raises (Dumbbells or Cable)</td><td class="p-3">3 x 12-15</td><td class="p-3">Targets Side Deltoids for width</td></tr>
+                            <tr><td class="p-3 font-medium">Triceps Pushdown (Rope/Bar)</td><td class="p-3">3 x 10-12</td><td class="p-3">Isolate Triceps</td></tr>
+                            <tr><td class="p-3 font-medium">Plank</td><td class="p-3">3 x 60 sec hold</td><td class="p-3">Core Endurance</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="day-2" class="workout-panel" style="display: none;">
+                <h2 class="text-2xl font-bold text-indigo-700 mb-4">Day 2: Lower Body (Strength)</h2>
+                <p class="text-stone-600 mb-6">This workout targets your quads, hamstrings, glutes, and calves. Focus on good form and controlling the weight through the full range of motion.</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-full text-left">
+                        <thead class="bg-stone-100">
+                            <tr>
+                                <th class="p-3 text-sm font-semibold text-stone-700">Exercise</th>
+                                <th class="p-3 text-sm font-semibold text-stone-700">Sets x Reps</th>
+                                <th class="p-3 text-sm font-semibold text-stone-700">Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-stone-200">
+                            <tr><td class="p-3 font-medium">Barbell Squats</td><td class="p-3">3 x 8-10</td><td class="p-3">Primary Quad/Glute Builder</td></tr>
+                            <tr><td class="p-3 font-medium">Romanian Deadlifts (RDLs)</td><td class="p-3">3 x 10-12</td><td class="p-3">Focus on Hamstrings and Glutes</td></tr>
+                            <tr><td class="p-3 font-medium">Walking Lunges</td><td class="p-3">3 x 10-12 (per leg)</td><td class="p-3">Unilateral Leg Work (Balance/Stability)</td></tr>
+                            <tr><td class="p-3 font-medium">Leg Press or Leg Extension</td><td class="p-3">3 x 12-15</td><td class="p-3">Finishing Quad Volume</td></tr>
+                            <tr><td class="p-3 font-medium">Calf Raises (Seated or Standing)</td><td class="p-3">3 x 15-20</td><td class="p-3">Focus on full stretch and squeeze</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="day-3" class="workout-panel" style="display: none;">
+                <h2 class="text-2xl font-bold text-indigo-700 mb-4">Day 3: Active Recovery / Rest</h2>
+                <p class="text-stone-600 text-lg">Today is for light activity or full rest. This is crucial for muscle repair and preventing burnout.</p>
+                <ul class="list-disc list-inside text-stone-700 space-y-2 mt-4">
+                    <li>Engage in a light walk (20-30 minutes).</li>
+                    <li>Perform dynamic stretching or a full-body yoga flow.</li>
+                    <li>Use a foam roller for any sore areas.</li>
+                    <li>Or, take a complete rest day. Listen to your body.</li>
+                </ul>
+            </div>
+
+            <div id="day-4" class="workout-panel" style="display: none;">
+                <h2 class="text-2xl font-bold text-indigo-700 mb-4">Day 4: Upper Body (Pull Focus)</h2>
+                <p class="text-stone-600 mb-6">Today's session builds back thickness and width, along with targeting your biceps and forearms. Focus on squeezing your back muscles.</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-full text-left">
+                        <thead class="bg-stone-100">
+                            <tr>
+                                <th class="p-3 text-sm font-semibold text-stone-700">Exercise</th>
+                                <th class="p-3 text-sm font-semibold text-stone-700">Sets x Reps</th>
+                                <th class="p-3 text-sm font-semibold text-stone-700">Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-stone-200">
+                            <tr><td class="p-3 font-medium">Pull-ups or Lat Pulldowns</td><td class="p-3">3 x 8-10</td><td class="p-3">Back Width (Lats)</td></tr>
+                            <tr><td class="p-3 font-medium">Barbell or Dumbbell Rows</td><td class="p-3">3 x 10-12</td><td class="p-3">Back Thickness</td></tr>
+                            <tr><td class="p-3 font-medium">Cable Seated Rows</td><td class="p-3">3 x 10-12</td><td class="p-3">Mid-Back Focus</td></tr>
+                            <tr><td class="p-3 font-medium">Face Pulls</td><td class="p-3">3 x 15-20</td><td class="p-3">Essential for Rear Delts & Shoulder Health</td></tr>
+                            <tr><td class="p-3 font-medium">Bicep Curls (Alternating)</td><td class="p-3">3 x 10-12</td><td class="p-3">Bicep Isolation</td></tr>
+                            <tr><td class="p-3 font-medium">Hammer Curls</td><td class="p-3">3 x 10-12</td><td class="p-3">Targets Forearms/Brachialis</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="day-5" class="workout-panel" style="display: none;">
+                <h2 class="text-2xl font-bold text-indigo-700 mb-4">Day 5: Full Body Conditioning (HIRT)</h2>
+                <p class="text-stone-600 mb-6">This is a circuit-style day focusing on compound movements and cardio integration. Perform <strong>3-4 rounds</strong> of the following circuit, resting 60 seconds between rounds.</p>
+                <ul class="divide-y divide-stone-200">
+                    <li class="py-3 flex justify-between items-center">
+                        <span class="font-medium">Kettlebell Swings</span>
+                        <span class="text-stone-600">15 reps (Explosive Hips/Posterior Chain)</span>
+                    </li>
+                    <li class="py-3 flex justify-between items-center">
+                        <span class="font-medium">Goblet Squats</span>
+                        <span class="text-stone-600">12 reps (Focus on depth and posture)</span>
+                    </li>
+                    <li class="py-3 flex justify-between items-center">
+                        <span class="font-medium">Burpees</span>
+                        <span class="text-stone-600">10 reps (Full Body Cardio)</span>
+                    </li>
+                    <li class="py-3 flex justify-between items-center">
+                        <span class="font-medium">Mountain Climbers</span>
+                        <span class="text-stone-600">45 seconds</span>
+                    </li>
+                    <li class="py-3 flex justify-between items-center">
+                        <span class="font-medium">Russian Twists</span>
+                        <span class="text-stone-600">20 reps (10 per side)</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="day-6" class="workout-panel" style="display: none;">
+                <h2 class="text-2xl font-bold text-indigo-700 mb-4">Day 6: Cardio & Core</h2>
+                <p class="text-stone-600 mb-6">Finish the week strong with sustained cardio and a dedicated core circuit. This builds endurance and strengthens your midline.</p>
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-lg font-semibold text-stone-700 mb-2">Cardio</h3>
+                        <p>30-45 minutes of sustained effort (e.g., a brisk run, cycling, elliptical, or jumping rope) at a heart rate of 60-75% of your maximum.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-stone-700 mb-2">Core Circuit (Repeat 3 times)</h3>
+                        <ul class="list-disc list-inside text-stone-700 space-y-2">
+                            <li>Leg Raises: 15 reps</li>
+                            <li>Side Planks: 30 seconds per side</li>
+                            <li>Bicycle Crunches: 20 reps (10 per side)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const navButtons = document.querySelectorAll('.nav-button');
+            const contentPanels = document.querySelectorAll('.workout-panel');
+            const dayNav = document.getElementById('day-nav');
+            
+            const dayMapping = {
+                "day-1": "day-1",
+                "day-2": "day-2",
+                "day-3": "day-3",
+                "day-4": "day-4",
+                "day-5": "day-5",
+                "day-6": "day-6",
+                "day-overview": "day-overview"
+            };
+            
+            const day7Button = document.createElement('button');
+            day7Button.dataset.day = "day-7";
+            day7Button.className = "nav-button w-full p-3 rounded-lg bg-white shadow-sm hover:bg-indigo-100 transition-colors duration-200";
+            day7Button.innerText = "Day 7: Rest";
+            dayNav.appendChild(day7Button);
+
+            const day7Panel = document.createElement('div');
+            day7Panel.id = "day-7";
+            day7Panel.className = "workout-panel";
+            day7Panel.style.display = "none";
+            day7Panel.innerHTML = `
+                <h2 class="text-2xl font-bold text-indigo-700 mb-4">Day 7: Rest</h2>
+                <p class="text-stone-600 text-lg">This is a complete rest day. Your muscles grow and repair during rest, so this is just as important as your training days. Focus on hydration, nutrition, and getting good sleep.</p>
+            `;
+            document.getElementById('content-area').appendChild(day7Panel);
+
+            const allNavButtons = document.querySelectorAll('.nav-button');
+            const allContentPanels = document.querySelectorAll('.workout-panel');
+
+            function showPanel(dayId) {
+                allContentPanels.forEach(panel => {
+                    panel.style.display = 'none';
+                });
+                
+                const panelToShow = document.getElementById(dayId);
+                if (panelToShow) {
+                    panelToShow.style.display = 'block';
+                }
+
+                allNavButtons.forEach(btn => {
+                    if (btn.dataset.day === dayId) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+            }
+
+            allNavButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const dayId = button.dataset.day;
+                    showPanel(dayId);
+                });
+            });
+
+            showPanel('day-overview');
+
+            const ctx = document.getElementById('splitChart').getContext('2d');
+            const splitChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Resistance Training', 'Conditioning & Core', 'Recovery & Rest'],
+                    datasets: [{
+                        label: 'Days per Week',
+                        data: [4, 2, 1],
+                        backgroundColor: [
+                            '#4f46e5',
+                            '#34d399',
+                            '#9ca3af'
+                        ],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Weekly Training Split',
+                            font: {
+                                size: 16
+                            },
+                            color: '#374151'
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
